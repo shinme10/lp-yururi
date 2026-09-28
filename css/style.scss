@@ -1,0 +1,2117 @@
+@charset "UTF-8";
+
+// =====================================================
+// デザイントークン（Design Rules.dc.html 準拠）
+// =====================================================
+
+// ---------- カラー ----------
+$color-base: #FAF8F4; // ページ背景（生成り）
+$color-base-deep: #F2EFE8; // 交互セクション背景
+$color-surface: #FFFFFF; // カード・フォーム
+$color-sage-100: #E7ECE4; // 予約セクション背景・タグ
+$color-sage-300: #C9D4C6; // 罫線・装飾（文字には使わない）
+$color-sage-500: #6E8B74; // 面・アイコン（大きい要素のみ）
+$color-sage-700: #4F6B57; // メインカラー・ラベル・CTA帯
+$color-sage-800: #3C5444; // リンクホバー・タグ文字
+$color-ink: #2F3A33; // 見出し・本文・フッター背景
+$color-ink-sub: #4A524C; // 本文（長文）
+$color-ink-muted: #5B635D; // 注記・キャプション
+$color-line: #D6D2C8; // 区切り線・入力欄枠
+$color-accent: #B4581F; // 予約ボタン・価格（CTA専用）
+$color-accent-hover: #9C4A18; // 予約ボタン ホバー・押下
+$color-error: #B23A3A; // エラー枠・メッセージ・定休日
+
+// デザイン内で使われている補助色
+$color-line-light: #E2DDD3; // ヘッダー下線・カード枠
+$color-line-faint: #EFECE6; // リスト区切り
+$color-sage-line: #9AA79D; // 入力済み枠・サブボタン枠
+$color-tag-line: #C9CFC6; // FVのタグ枠
+$color-accent-disabled: #C98A64; // 送信中ボタン
+$color-placeholder: #6B6F68;
+
+// ---------- タイポグラフィ ----------
+$font-heading: "Shippori Mincho", serif;
+$font-body: "Zen Kaku Gothic New", sans-serif;
+
+// ---------- 余白（8pxベース） ----------
+$space-1: 4px;
+$space-2: 8px;
+$space-3: 12px;
+$space-4: 16px;
+$space-5: 24px;
+$space-6: 32px;
+$space-7: 48px;
+$space-8: 64px;
+$space-9: 96px;
+$space-10: 128px;
+
+// ---------- レイアウト ----------
+$container: 1200px;
+$gutter: 20px;
+$section-y: clamp(72px, 9vw, 128px);
+$bp-sp: 767px; // これ以下をSP
+$bp-compact: 1099px; // これ以下はハンバーガーメニュー
+$header-h: 88px;
+$header-h-sp: 64px;
+
+// ---------- 角丸 ----------
+$radius-sm: 4px;
+$radius-md: 12px;
+$radius-lg: 16px;
+$radius-xl: 24px;
+$radius-pill: 999px;
+
+// ---------- 影 ----------
+$shadow-sm: 0 6px 20px rgba(47, 58, 51, .05);
+$shadow-md: 0 12px 40px rgba(47, 58, 51, .08);
+$shadow-cta: 0 8px 20px rgba(180, 88, 31, .22);
+$shadow-card: 0 8px 28px rgba(47, 58, 51, .06);
+
+// ---------- モーション ----------
+$transition: all .2s ease;
+$ease-reveal: cubic-bezier(.2, .7, .2, 1);
+
+// ---------- ミックスイン ----------
+@mixin sp {
+    @media (max-width: $bp-sp) {
+        @content;
+    }
+}
+
+@mixin pc {
+    @media (min-width: #{$bp-sp + 1}) {
+        @content;
+    }
+}
+
+@mixin compact {
+    @media (max-width: $bp-compact) {
+        @content;
+    }
+}
+
+@mixin wide {
+    @media (min-width: #{$bp-compact + 1}) {
+        @content;
+    }
+}
+
+// カード類のレスポンシブグリッド（最小幅を下回ると1列になる）
+@mixin auto-grid($min) {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, $min), 1fr));
+}
+
+@mixin heading($weight: 600) {
+    font-family: $font-heading;
+    font-weight: $weight;
+}
+
+@mixin focus-ring($width: 3px, $offset: 3px) {
+    outline: $width solid $color-sage-700;
+    outline-offset: $offset;
+}
+
+// CSSカスタムプロパティとしても公開（DevToolsでの確認・他ページでの再利用用）
+:root {
+    --color-base: #{$color-base};
+    --color-base-deep: #{$color-base-deep};
+    --color-surface: #{$color-surface};
+    --color-sage-100: #{$color-sage-100};
+    --color-sage-300: #{$color-sage-300};
+    --color-sage-500: #{$color-sage-500};
+    --color-sage-700: #{$color-sage-700};
+    --color-sage-800: #{$color-sage-800};
+    --color-ink: #{$color-ink};
+    --color-ink-sub: #{$color-ink-sub};
+    --color-ink-muted: #{$color-ink-muted};
+    --color-line: #{$color-line};
+    --color-accent: #{$color-accent};
+    --color-accent-hover: #{$color-accent-hover};
+    --color-error: #{$color-error};
+}
+
+// =====================================================
+// ベース
+// =====================================================
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    html {
+        scroll-behavior: smooth;
+    }
+}
+
+body {
+    margin: 0;
+    min-width: 320px;
+    overflow-x: hidden;
+    background: $color-base;
+    font-family: $font-body;
+    color: $color-ink;
+    -webkit-font-smoothing: antialiased;
+
+    // ドロワー表示中は背面をスクロールさせない
+    &.is-locked {
+        overflow: hidden;
+    }
+}
+
+img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+a {
+    color: $color-sage-700;
+
+    &:hover {
+        color: $color-sage-800;
+    }
+}
+
+input,
+select,
+textarea,
+button {
+    font-family: inherit;
+}
+
+ul,
+ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+:focus-visible {
+    @include focus-ring(2px, 4px);
+}
+
+// 固定ヘッダーの下にアンカー先の見出しが隠れないようにする
+[id] {
+    scroll-margin-top: $header-h;
+
+    @include compact {
+        scroll-margin-top: $header-h-sp;
+    }
+}
+
+// ---------- ユーティリティ ----------
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.sp-only {
+    @include pc {
+        display: none;
+    }
+}
+
+.skip-link {
+    position: absolute;
+    top: $space-2;
+    left: $space-2;
+    z-index: 100;
+    padding: $space-3 $space-4;
+    border-radius: $radius-md;
+    background: $color-ink;
+    color: $color-surface;
+    font-weight: 700;
+    transform: translateY(-200%);
+
+    &:focus {
+        transform: none;
+        color: $color-surface;
+    }
+}
+
+.text-link {
+    color: $color-sage-700;
+
+    &:hover {
+        color: $color-sage-800;
+    }
+}
+
+// ---------- スクロールで出現（フェードアップ） ----------
+// JS有効かつ「視差効果を減らす」設定がオフのときだけ初期状態を非表示にする
+@media (prefers-reduced-motion: no-preference) {
+    .js .reveal {
+        opacity: 0;
+        transform: translateY(24px);
+        transition:
+            opacity .8s ease var(--delay, 0s),
+            transform .8s $ease-reveal var(--delay, 0s);
+
+        &.is-visible {
+            opacity: 1;
+            transform: none;
+        }
+    }
+}
+
+// =====================================================
+// レイアウト
+// =====================================================
+.container {
+    width: min($container, calc(100% - #{$gutter * 2}));
+    margin: 0 auto;
+
+    &--1080 {
+        width: min(1080px, calc(100% - #{$gutter * 2}));
+    }
+
+    &--960 {
+        width: min(960px, calc(100% - #{$gutter * 2}));
+    }
+
+    &--880 {
+        width: min(880px, calc(100% - #{$gutter * 2}));
+    }
+
+    &--760 {
+        width: min(760px, calc(100% - #{$gutter * 2}));
+    }
+}
+
+.section {
+    padding: $section-y 0;
+
+    &--deep {
+        background: $color-base-deep;
+    }
+
+    &--sage {
+        background: $color-sage-100;
+    }
+}
+
+.section-head {
+    display: flex;
+    flex-direction: column;
+    gap: $space-3;
+    align-items: center;
+    margin-bottom: clamp(40px, 5vw, 64px);
+    text-align: center;
+
+    // 見出し下の余白：お悩み・FAQ・予約フォームはデザイン上やや小さい
+    &--worries {
+        margin-bottom: clamp(36px, 4vw, 56px);
+    }
+
+    &--faq {
+        margin-bottom: clamp(40px, 5vw, 56px);
+    }
+
+    &--reserve {
+        margin-bottom: clamp(32px, 4vw, 48px);
+    }
+
+    &__label {
+        font-size: 13px;
+        letter-spacing: .3em;
+        color: $color-sage-700;
+
+        &--dark {
+            color: $color-sage-800;
+        }
+    }
+
+    &__title {
+        @include heading;
+        margin: 0;
+        font-size: clamp(26px, 2.8vw, 40px);
+        line-height: 1.5;
+        letter-spacing: .06em;
+    }
+
+    &__text {
+        margin: 0;
+        font-size: 16px;
+        line-height: 1.8;
+        color: $color-ink-sub;
+
+        &--dark {
+            color: #3F4841;
+        }
+    }
+}
+
+// =====================================================
+// ボタン
+// =====================================================
+
+// Primary（予約）：ホバーで色を濃くし、矢印を右へ6pxずらす
+.button-primary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $space-4;
+    height: 60px;
+    padding: 0 $space-6;
+    border-radius: $radius-md;
+    background: $color-accent;
+    color: $color-surface;
+    font-size: 17px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: $transition;
+
+    &:hover {
+        gap: 22px;
+        background: $color-accent-hover;
+        color: $color-surface;
+    }
+
+    &:active {
+        background: $color-accent-hover;
+    }
+
+    &:focus-visible {
+        @include focus-ring;
+        background: $color-accent-hover;
+    }
+}
+
+// On dark（CTA帯）：白枠 → 白塗りに反転
+.button-on-dark {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 52px;
+    border: 1.5px solid $color-surface;
+    border-radius: $radius-md;
+    color: $color-surface;
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: $transition;
+
+    &:hover {
+        background: $color-surface;
+        color: $color-sage-800;
+    }
+
+    &:focus-visible {
+        outline-color: $color-surface;
+    }
+}
+
+// =====================================================
+// ロゴ
+// =====================================================
+.logo {
+    display: flex;
+    align-items: baseline;
+    gap: $space-3;
+    color: $color-ink;
+    text-decoration: none;
+    white-space: nowrap;
+
+    &:hover {
+        color: $color-ink;
+    }
+
+    &__main {
+        @include heading(700);
+        font-size: 24px;
+        letter-spacing: .08em;
+    }
+
+    &__sub {
+        font-size: 12px;
+        letter-spacing: .2em;
+        color: $color-sage-700;
+    }
+
+    &--footer {
+        color: #E9ECE6;
+
+        .logo__main {
+            color: $color-surface;
+        }
+
+        .logo__sub {
+            color: inherit;
+        }
+    }
+}
+
+// =====================================================
+// ヘッダー
+// =====================================================
+.header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: rgba(250, 248, 244, .96);
+    border-bottom: 1px solid $color-line-light;
+
+    &__inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: $space-5;
+        width: min($container, calc(100% - #{$gutter * 2}));
+        height: $header-h;
+        margin: 0 auto;
+    }
+
+    &__nav {
+        display: flex;
+        gap: $space-6;
+        font-size: 14px;
+        letter-spacing: .08em;
+    }
+
+    &__nav-link {
+        padding: $space-3 0;
+        color: $color-ink;
+        text-decoration: none;
+        white-space: nowrap;
+        text-underline-offset: 8px;
+
+        &:hover {
+            color: $color-sage-700;
+            text-decoration: underline;
+        }
+    }
+
+    &__actions {
+        display: flex;
+        align-items: center;
+        gap: $space-5;
+    }
+
+    &__tel {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        color: $color-ink;
+        text-decoration: none;
+        white-space: nowrap;
+
+        &:hover {
+            color: $color-sage-700;
+        }
+    }
+
+    &__tel-number {
+        @include heading;
+        font-size: 20px;
+        letter-spacing: .05em;
+    }
+
+    &__tel-note {
+        font-size: 12px;
+        color: $color-ink-muted;
+    }
+
+    &__reserve {
+        display: flex;
+        align-items: center;
+        height: 48px;
+        padding: 0 28px;
+        border-radius: $radius-md;
+        background: $color-accent;
+        color: $color-surface;
+        font-size: 15px;
+        font-weight: 700;
+        text-decoration: none;
+        white-space: nowrap;
+        transition: background .2s, transform .2s;
+
+        &:hover {
+            background: $color-accent-hover;
+            color: $color-surface;
+            transform: translateY(-1px);
+        }
+
+        &:focus-visible {
+            @include focus-ring;
+        }
+    }
+
+    &__menu-button {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        width: 48px;
+        height: 48px;
+        border: 0;
+        background: transparent;
+        cursor: pointer;
+
+        span {
+            width: 24px;
+            height: 1.5px;
+            background: $color-ink;
+        }
+    }
+
+    // 1099px以下：コンパクトヘッダー
+    @include compact {
+        &__inner {
+            width: 100%;
+            height: $header-h-sp;
+            padding: 0 $space-2 0 $gutter;
+        }
+
+        .logo {
+            gap: $space-2;
+        }
+
+        .logo__main {
+            font-size: 20px;
+        }
+
+        .logo__sub {
+            font-size: 11px;
+            letter-spacing: .15em;
+        }
+
+        &__nav,
+        &__actions {
+            display: none;
+        }
+
+        &__menu-button {
+            display: flex;
+        }
+    }
+}
+
+// =====================================================
+// ドロワーメニュー
+// =====================================================
+.drawer {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+    padding: 0 $space-2 $space-6 $gutter;
+    overflow-y: auto;
+    background: $color-base;
+
+    &[hidden] {
+        display: none;
+    }
+
+    @include wide {
+        display: none;
+    }
+
+    &__head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-shrink: 0;
+        height: $header-h-sp;
+
+        .logo__main {
+            font-size: 20px;
+        }
+    }
+
+    &__close {
+        width: 48px;
+        height: 48px;
+        border: 0;
+        background: transparent;
+        color: $color-ink;
+        font-size: 28px;
+        cursor: pointer;
+    }
+
+    &__nav {
+        display: flex;
+        flex-direction: column;
+        margin-top: $space-4;
+        padding-right: $space-3;
+    }
+
+    &__link {
+        @include heading;
+        display: flex;
+        align-items: center;
+        min-height: 56px;
+        border-bottom: 1px solid $color-line-light;
+        color: $color-ink;
+        font-size: 18px;
+        text-decoration: none;
+
+        &:hover {
+            color: $color-sage-700;
+        }
+    }
+
+    &__actions {
+        display: flex;
+        flex-direction: column;
+        gap: $space-3;
+        margin-top: auto;
+        padding-top: $space-6;
+        padding-right: $space-3;
+    }
+
+    &__reserve,
+    &__tel {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 56px;
+        border-radius: $radius-md;
+        font-size: 17px;
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+    &__reserve {
+        background: $color-accent;
+        color: $color-surface;
+
+        &:hover,
+        &:active {
+            background: $color-accent-hover;
+            color: $color-surface;
+        }
+    }
+
+    &__tel {
+        border: 1px solid $color-sage-line;
+        color: $color-sage-800;
+
+        &:hover {
+            border-color: $color-sage-700;
+            background: #F2F5F0;
+            color: $color-ink;
+        }
+    }
+}
+
+// =====================================================
+// ファーストビュー
+// =====================================================
+.fv {
+    padding: clamp(24px, 4vw, 64px) 0 clamp(64px, 7vw, 96px);
+
+    &__inner {
+        @include auto-grid(460px);
+        gap: clamp(28px, 4vw, 56px);
+        align-items: stretch;
+        width: min($container, calc(100% - #{$gutter * 2}));
+        margin: 0 auto;
+    }
+
+    // 写真：PCはテキストの右側、SPはテキストの上で右端まで裁ち落とし
+    &__visual {
+        position: relative;
+        overflow: hidden;
+        background: $color-sage-100;
+
+        img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        @include pc {
+            order: 2;
+            min-height: 600px;
+            border-radius: $radius-xl;
+        }
+
+        @include sp {
+            height: 220px;
+            margin-right: -$gutter;
+            border-radius: 20px 0 0 20px;
+
+            img {
+                object-position: center 60%;
+            }
+        }
+    }
+
+    &__vertical {
+        position: absolute;
+        top: 40px;
+        right: $space-5;
+        margin: 0;
+        padding: 20px $space-3;
+        border-radius: $radius-pill;
+        background: rgba(250, 248, 244, .92);
+        color: $color-ink;
+        font-family: $font-heading;
+        font-weight: 500;
+        font-size: 18px;
+        letter-spacing: .4em;
+        writing-mode: vertical-rl;
+
+        @include sp {
+            display: none;
+        }
+    }
+
+    &__body {
+        display: flex;
+        flex-direction: column;
+        gap: clamp(18px, 2vw, 28px);
+        padding-top: clamp(0px, 2vw, 24px);
+    }
+
+    &__menu {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: $space-3;
+    }
+
+    &__menu-label {
+        font-size: 13px;
+        letter-spacing: .2em;
+        color: $color-sage-700;
+    }
+
+    &__tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: $space-2;
+    }
+
+    &__tag {
+        padding: 6px 14px;
+        border: 1px solid $color-tag-line;
+        border-radius: $radius-pill;
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    &__title {
+        @include heading;
+        margin: 0;
+        font-size: clamp(30px, 3.8vw, 54px);
+        line-height: 1.45;
+        letter-spacing: .06em;
+    }
+
+    &__lead {
+        max-width: 540px;
+        margin: 0;
+        font-size: clamp(16px, 1.2vw, 17px);
+        line-height: 2;
+        color: $color-ink-sub;
+        text-wrap: pretty;
+    }
+
+    &__offer {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: $space-4 $space-5;
+        max-width: 620px;
+        padding: 20px 0;
+        border-top: 1px solid $color-line;
+        border-bottom: 1px solid $color-line;
+    }
+
+    &__price {
+        display: flex;
+        flex-direction: column;
+        gap: $space-1;
+    }
+
+    &__price-label {
+        font-size: 13px;
+        letter-spacing: .1em;
+        color: $color-sage-700;
+    }
+
+    &__price-row {
+        display: flex;
+        align-items: baseline;
+        gap: $space-3;
+    }
+
+    &__price-value {
+        @include heading(700);
+        font-size: clamp(40px, 3.4vw, 48px);
+        line-height: 1.1;
+        color: $color-accent;
+    }
+
+    &__price-regular {
+        font-size: 14px;
+        color: $color-ink-muted;
+    }
+
+    &__button {
+        flex: 1 1 220px;
+        max-width: 300px;
+        box-shadow: $shadow-cta;
+    }
+
+    &__trust {
+        display: flex;
+        flex-wrap: wrap;
+        gap: $space-4 $space-6;
+    }
+
+    &__trust-item {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    &__trust-title {
+        @include heading(700);
+        font-size: 18px;
+    }
+
+    &__trust-text {
+        font-size: 13px;
+        color: $color-ink-muted;
+    }
+}
+
+// =====================================================
+// お悩み
+// =====================================================
+.worries {
+    @include auto-grid(360px);
+    gap: $space-1 40px;
+    padding: clamp(24px, 3vw, 48px);
+    border-radius: $radius-xl;
+    background: $color-surface;
+    box-shadow: 0 8px 32px rgba(47, 58, 51, .06);
+
+    &__item {
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+        padding: $space-4 0;
+        border-bottom: 1px solid $color-line-faint;
+        font-size: clamp(16px, 1.2vw, 17px);
+        line-height: 1.7;
+
+        &::before {
+            content: "✓";
+            display: flex;
+            flex: 0 0 24px;
+            align-items: center;
+            justify-content: center;
+            height: 24px;
+            margin-top: 2px;
+            border-radius: 6px;
+            background: $color-sage-700;
+            color: $color-surface;
+            font-size: 14px;
+        }
+    }
+
+    &__message {
+        @include heading;
+        margin: clamp(32px, 4vw, 48px) 0 0;
+        font-size: clamp(20px, 2vw, 26px);
+        line-height: 1.8;
+        letter-spacing: .04em;
+        text-align: center;
+    }
+
+    &__marker {
+        border-bottom: 2px solid $color-sage-300;
+        color: $color-sage-700;
+    }
+}
+
+// =====================================================
+// 選ばれる理由
+// =====================================================
+.reasons {
+    @include auto-grid(260px);
+    gap: clamp(24px, 2.4vw, 32px);
+}
+
+.reason {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+
+    &__image {
+        width: 100%;
+        aspect-ratio: 4 / 3;
+        border-radius: 20px;
+        background: $color-sage-100;
+        object-fit: cover;
+    }
+
+    &__no {
+        @include heading(700);
+        font-size: 15px;
+        letter-spacing: .1em;
+        color: $color-sage-700;
+    }
+
+    &__title {
+        @include heading;
+        margin: 0;
+        font-size: clamp(20px, 1.6vw, 22px);
+        line-height: 1.6;
+    }
+
+    &__text {
+        margin: 0;
+        font-size: 16px;
+        line-height: 1.9;
+        color: $color-ink-sub;
+    }
+}
+
+// =====================================================
+// 施術の流れ
+// =====================================================
+.flow {
+    @include auto-grid(200px);
+    gap: $space-4;
+
+    &__item {
+        display: flex;
+        flex-direction: column;
+        gap: $space-3;
+        padding: 28px $space-5;
+        border-radius: 20px;
+        background: $color-surface;
+        box-shadow: $shadow-sm;
+    }
+
+    &__head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    &__no {
+        @include heading(700);
+        font-size: 32px;
+        line-height: 1;
+        color: $color-sage-700;
+    }
+
+    &__time {
+        padding: $space-1 $space-3;
+        border-radius: $radius-pill;
+        background: $color-sage-100;
+        color: $color-sage-800;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    &__title {
+        @include heading;
+        margin: 0;
+        font-size: 19px;
+        line-height: 1.5;
+    }
+
+    &__text {
+        margin: 0;
+        font-size: 16px;
+        line-height: 1.85;
+        color: $color-ink-sub;
+    }
+}
+
+// =====================================================
+// 料金
+// =====================================================
+.price {
+    @include auto-grid(320px);
+    gap: $space-5;
+    align-items: stretch;
+
+    &__note {
+        margin: $space-5 0 0;
+        font-size: 14px;
+        line-height: 1.8;
+        color: $color-ink-muted;
+        text-align: center;
+    }
+}
+
+.price-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: $space-4;
+    padding: clamp(28px, 3vw, 40px);
+    border: 1px solid $color-line;
+    border-radius: $radius-xl;
+    background: $color-surface;
+
+    &__label {
+        font-size: 15px;
+        font-weight: 700;
+        color: $color-ink-muted;
+    }
+
+    &__row {
+        display: flex;
+        align-items: baseline;
+        gap: $space-2;
+    }
+
+    &__value {
+        @include heading(700);
+        font-size: 44px;
+        line-height: 1.1;
+    }
+
+    &__unit {
+        font-size: 14px;
+        color: $color-ink-muted;
+    }
+
+    &__list {
+        display: flex;
+        flex-direction: column;
+        gap: $space-2;
+        font-size: 16px;
+        line-height: 1.7;
+        color: $color-ink-sub;
+    }
+
+    &__badge {
+        position: absolute;
+        top: -16px;
+        left: 28px;
+        padding: 6px $space-4;
+        border-radius: $radius-pill;
+        background: $color-accent;
+        color: $color-surface;
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+    &__button {
+        margin-top: $space-2;
+    }
+
+    // 初回限定カード
+    &--first {
+        border: 2px solid $color-accent;
+        box-shadow: 0 16px 40px rgba(180, 88, 31, .12);
+
+        .price-card__label {
+            color: $color-accent-hover;
+        }
+
+        .price-card__row {
+            flex-wrap: wrap;
+        }
+
+        .price-card__value {
+            font-size: 56px;
+            color: $color-accent;
+
+            @include sp {
+                font-size: 48px;
+            }
+        }
+
+        .price-card__list {
+            color: $color-ink;
+        }
+    }
+}
+
+// =====================================================
+// お客様の声
+// =====================================================
+.voices {
+    @include auto-grid(320px);
+    gap: $space-5;
+
+    &__note {
+        margin: 20px 0 0;
+        font-size: 13px;
+        color: $color-ink-muted;
+        text-align: center;
+    }
+}
+
+.voice {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 28px;
+    border-radius: $radius-xl;
+    background: $color-surface;
+    box-shadow: $shadow-card;
+
+    &__head {
+        display: flex;
+        align-items: center;
+        gap: $space-4;
+    }
+
+    &__avatar {
+        flex: 0 0 80px;
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: $color-sage-100;
+        object-fit: cover;
+        object-position: center 30%;
+    }
+
+    &__profile {
+        display: flex;
+        flex-direction: column;
+        gap: $space-1;
+    }
+
+    &__who {
+        font-size: 15px;
+        font-weight: 700;
+    }
+
+    &__worry {
+        align-self: flex-start;
+        padding: 3px 10px;
+        border-radius: $radius-pill;
+        background: $color-sage-100;
+        color: $color-sage-800;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    &__title {
+        @include heading;
+        margin: 0;
+        font-size: 20px;
+        line-height: 1.6;
+    }
+
+    &__body {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin: 0;
+        font-size: 16px;
+        line-height: 1.85;
+    }
+
+    &__row {
+        display: grid;
+        grid-template-columns: 56px 1fr;
+        gap: $space-2;
+    }
+
+    &__term {
+        padding-top: 3px;
+        font-size: 13px;
+        font-weight: 700;
+        color: $color-ink-muted;
+
+        &--after {
+            color: $color-sage-700;
+        }
+    }
+
+    &__before,
+    &__after {
+        margin: 0;
+    }
+
+    &__before {
+        color: $color-ink-sub;
+    }
+}
+
+// =====================================================
+// 院長あいさつ
+// =====================================================
+.message {
+    @include auto-grid(380px);
+    gap: clamp(32px, 5vw, 72px);
+    align-items: center;
+
+    &__image {
+        width: 100%;
+        aspect-ratio: 4 / 5;
+        border-radius: $radius-xl;
+        background: $color-sage-100;
+        object-fit: cover;
+        object-position: center 20%;
+    }
+
+    &__body {
+        display: flex;
+        flex-direction: column;
+        gap: 22px;
+    }
+
+    &__title {
+        @include heading;
+        margin: 0;
+        font-size: clamp(24px, 2.4vw, 34px);
+        line-height: 1.6;
+        letter-spacing: .04em;
+    }
+
+    &__text {
+        margin: 0;
+        font-size: 16px;
+        line-height: 2;
+        color: $color-ink-sub;
+        text-wrap: pretty;
+    }
+
+    &__profile {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        padding-top: $space-2;
+        border-top: 1px solid $color-line;
+    }
+
+    &__name {
+        display: flex;
+        align-items: baseline;
+        gap: $space-3;
+        margin: 0;
+        padding-top: 14px;
+    }
+
+    &__role {
+        font-size: 14px;
+        color: $color-ink-muted;
+    }
+
+    &__name-text {
+        @include heading(700);
+        font-size: 22px;
+        letter-spacing: .1em;
+    }
+
+    &__career {
+        font-size: 15px;
+        line-height: 1.9;
+        color: $color-ink-sub;
+    }
+}
+
+// =====================================================
+// CTA帯
+// =====================================================
+.cta {
+    padding: 0 0 $section-y;
+
+    &__inner {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: $space-5 40px;
+        width: min(1080px, calc(100% - #{$gutter * 2}));
+        margin: 0 auto;
+        padding: clamp(32px, 4vw, 56px);
+        border-radius: 28px;
+        background: $color-sage-700;
+        color: $color-surface;
+    }
+
+    &__info {
+        display: flex;
+        flex-direction: column;
+        gap: $space-2;
+    }
+
+    &__label {
+        font-size: 14px;
+        letter-spacing: .1em;
+    }
+
+    &__price-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: $space-3;
+    }
+
+    &__price {
+        @include heading(700);
+        font-size: clamp(40px, 4vw, 52px);
+        line-height: 1.1;
+    }
+
+    &__regular,
+    &__text {
+        font-size: 15px;
+    }
+
+    &__text {
+        line-height: 1.7;
+    }
+
+    &__actions {
+        display: flex;
+        flex: 1 1 260px;
+        flex-direction: column;
+        gap: $space-3;
+        max-width: 340px;
+
+        .button-primary:focus-visible {
+            outline-color: $color-surface;
+        }
+    }
+
+    &__sub-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: $space-3;
+    }
+}
+
+// =====================================================
+// よくある質問（アコーディオン）
+// =====================================================
+.faq {
+    display: flex;
+    flex-direction: column;
+    gap: $space-3;
+
+    &__item {
+        overflow: hidden;
+        border: 1px solid $color-line-light;
+        border-radius: $radius-lg;
+        background: $color-surface;
+        transition: border-color .2s;
+
+        &.is-open {
+            border-color: $color-sage-line;
+        }
+    }
+
+    &__heading {
+        margin: 0;
+        font: inherit;
+    }
+
+    &__question {
+        display: flex;
+        align-items: center;
+        gap: $space-4;
+        width: 100%;
+        min-height: 64px;
+        padding: 18px clamp(16px, 2vw, 28px);
+        border: 0;
+        background: transparent;
+        color: $color-ink;
+        text-align: left;
+        cursor: pointer;
+        transition: background .2s;
+
+        &:hover {
+            background: $color-base;
+        }
+
+        &:focus-visible {
+            outline-offset: -3px;
+        }
+    }
+
+    &__q,
+    &__a {
+        @include heading(700);
+        font-size: 20px;
+    }
+
+    &__q {
+        color: $color-sage-700;
+    }
+
+    &__a {
+        color: $color-accent;
+    }
+
+    &__question-text {
+        flex: 1;
+        font-size: clamp(16px, 1.2vw, 17px);
+        font-weight: 700;
+        line-height: 1.6;
+    }
+
+    // ＋ / − アイコン（開閉で背景色を反転）
+    &__icon {
+        display: flex;
+        flex: 0 0 32px;
+        align-items: center;
+        justify-content: center;
+        height: 32px;
+        border-radius: 50%;
+        background: $color-sage-100;
+        color: $color-sage-800;
+        font-size: 20px;
+        line-height: 1;
+        transition: $transition;
+
+        &::before {
+            content: "+";
+        }
+
+        .is-open & {
+            background: $color-sage-700;
+            color: $color-surface;
+
+            &::before {
+                content: "−";
+            }
+        }
+    }
+
+    // 高さ auto へのアニメーションは grid-template-rows の 0fr ⇔ 1fr で実現
+    &__answer {
+        display: grid;
+        grid-template-rows: 0fr;
+        visibility: hidden;
+        transition: grid-template-rows .3s ease, visibility .3s;
+
+        .is-open & {
+            grid-template-rows: 1fr;
+            visibility: visible;
+        }
+    }
+
+    &__answer-inner {
+        display: flex;
+        gap: $space-4;
+        min-height: 0;
+        overflow: hidden;
+        padding: 0 clamp(16px, 2vw, 28px);
+
+        // 閉じたときに余白が残らないよう、下の余白は擬似要素ではなく本文側に持たせる
+        .faq__answer-text {
+            padding-bottom: $space-5;
+        }
+    }
+
+    &__answer-text {
+        flex: 1;
+        margin: 0;
+        font-size: 16px;
+        line-height: 1.9;
+        color: $color-ink-sub;
+    }
+}
+
+// =====================================================
+// アクセス
+// =====================================================
+.access {
+    @include auto-grid(440px);
+    gap: clamp(28px, 4vw, 56px);
+    align-items: start;
+
+    &__map {
+        margin: 0;
+        overflow: hidden;
+        aspect-ratio: 4 / 3;
+        border-radius: $radius-xl;
+        background: $color-sage-100;
+
+        svg {
+            display: block;
+            width: 100%;
+            height: 100%;
+            font-family: $font-body;
+        }
+    }
+
+    &__info {
+        display: flex;
+        flex-direction: column;
+        gap: $space-5;
+    }
+
+    &__list {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 14px $space-5;
+        margin: 0;
+        font-size: 16px;
+        line-height: 1.8;
+
+        dt {
+            font-weight: 700;
+            color: $color-sage-700;
+        }
+
+        dd {
+            margin: 0;
+        }
+    }
+
+    &__note {
+        margin: 0;
+        font-size: 14px;
+        line-height: 1.8;
+        color: $color-ink-muted;
+    }
+}
+
+.hours {
+    width: 100%;
+    overflow: hidden;
+    border: 1px solid $color-line;
+    border-radius: $radius-lg;
+    border-collapse: separate;
+    border-spacing: 0;
+    table-layout: fixed;
+    text-align: center;
+
+    th,
+    td {
+        padding: 0;
+    }
+
+    thead th {
+        padding: $space-3 0;
+        background: $color-sage-100;
+        font-size: 14px;
+        font-weight: 700;
+
+        &:first-child {
+            width: calc(100% * 1.6 / 8.6);
+            padding: $space-3 $space-1 $space-3 $space-4;
+            text-align: left;
+        }
+    }
+
+    tbody {
+        background: $color-surface;
+        font-size: 15px;
+
+        th {
+            padding: 14px $space-1 14px $space-4;
+            font-weight: 400;
+            text-align: left;
+        }
+
+        td {
+            color: $color-sage-700;
+        }
+    }
+
+    &__closed {
+        font-size: 13px;
+        font-weight: 700;
+        color: $color-error !important;
+    }
+}
+
+// =====================================================
+// 予約フォーム
+// =====================================================
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: $space-5;
+    padding: clamp(24px, 4vw, 48px);
+    border-radius: 28px;
+    background: $color-surface;
+    box-shadow: $shadow-md;
+
+    &[hidden] {
+        display: none;
+    }
+
+    // 送信時のエラーまとめ
+    &__summary {
+        padding: 14px 18px;
+        border: 1px solid #E6B8AE;
+        border-radius: $radius-md;
+        background: #FDF1EE;
+        color: #8E2F2F;
+        font-size: 15px;
+        font-weight: 700;
+        line-height: 1.7;
+
+        &:focus {
+            outline: none;
+        }
+    }
+
+    &__grid {
+        @include auto-grid(260px);
+        gap: $space-5;
+    }
+
+    &__submit {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: $space-3;
+        padding-top: $space-2;
+    }
+
+    &__button {
+        width: min(100%, 420px);
+        height: 64px;
+        border: 0;
+        border-radius: $radius-md;
+        background: $color-accent;
+        color: $color-surface;
+        font-size: 18px;
+        font-weight: 700;
+        box-shadow: $shadow-cta;
+        cursor: pointer;
+        transition: $transition;
+
+        &:hover,
+        &:active {
+            background: $color-accent-hover;
+        }
+
+        &:focus-visible {
+            @include focus-ring;
+            background: $color-accent-hover;
+        }
+
+        // 送信中
+        &:disabled {
+            background: $color-accent-disabled;
+            cursor: wait;
+        }
+    }
+
+    &__note {
+        margin: 0;
+        font-size: 13px;
+        line-height: 1.7;
+        color: $color-ink-muted;
+        text-align: center;
+    }
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: $space-2;
+
+    &--group {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        min-width: 0;
+
+        .field__label {
+            margin-bottom: $space-2;
+            padding: 0;
+        }
+    }
+
+    &__label {
+        display: flex;
+        align-items: center;
+        gap: $space-2;
+        font-size: 15px;
+        font-weight: 700;
+    }
+
+    &__badge {
+        padding: 2px 6px;
+        border-radius: $radius-sm;
+        background: #F4E4D9;
+        color: #8A4116;
+        font-size: 12px;
+
+        &--optional {
+            background: #ECEAE4;
+            color: $color-ink-sub;
+        }
+    }
+
+    // 入力欄：未入力 → フォーカス → 入力済み → エラー
+    &__input {
+        width: 100%;
+        min-width: 0;
+        height: 56px;
+        padding: 0 $space-4;
+        border: 1.5px solid $color-line;
+        border-radius: $radius-md;
+        background-color: $color-surface;
+        color: $color-ink;
+        font-size: 16px; // iOSの自動ズーム防止
+        outline: none;
+        transition: all .15s;
+
+        &::placeholder {
+            color: $color-placeholder;
+        }
+
+        &.is-filled {
+            border-color: $color-sage-line;
+        }
+
+        &:focus {
+            border-color: $color-sage-700;
+            box-shadow: 0 0 0 4px rgba(79, 107, 87, .18);
+        }
+
+        &.is-error {
+            border-color: $color-error;
+            background-color: #FDF6F4;
+
+            &:focus {
+                box-shadow: 0 0 0 4px rgba(178, 58, 58, .15);
+            }
+        }
+
+        &--date {
+            padding: 0 14px;
+        }
+
+        &--select {
+            padding: 0 36px 0 $space-3;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' fill='none' stroke='%234F6B57' stroke-width='1.5'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            cursor: pointer;
+        }
+
+        &--textarea {
+            height: auto;
+            padding: 14px $space-4;
+            line-height: 1.7;
+            resize: vertical;
+        }
+    }
+
+    &__datetime {
+        display: grid;
+        grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+        gap: $space-3;
+    }
+
+    // エラー・入力済みメッセージ（空のときは非表示）
+    &__message {
+        margin: 0;
+        font-size: 14px;
+
+        &:empty {
+            display: none;
+        }
+
+        &.is-error {
+            color: $color-error;
+            font-weight: 700;
+        }
+
+        &.is-ok {
+            color: $color-sage-800;
+        }
+    }
+
+    &__note {
+        margin: 0;
+        font-size: 13px;
+        color: $color-ink-muted;
+    }
+}
+
+// 送信完了パネル
+.complete {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: clamp(32px, 5vw, 56px);
+    border-radius: 28px;
+    background: $color-surface;
+    box-shadow: $shadow-md;
+    text-align: center;
+
+    &[hidden] {
+        display: none;
+    }
+
+    &:focus {
+        outline: none;
+    }
+
+    &__icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 72px;
+        height: 72px;
+        border-radius: 50%;
+        background: $color-sage-700;
+        color: $color-surface;
+        font-size: 32px;
+    }
+
+    &__title {
+        @include heading;
+        margin: 0;
+        font-size: clamp(22px, 2.2vw, 28px);
+        line-height: 1.6;
+    }
+
+    &__text {
+        margin: 0;
+        font-size: 16px;
+        line-height: 1.9;
+        color: $color-ink-sub;
+    }
+
+    &__info {
+        margin: 0;
+        padding: $space-4 20px;
+        border-radius: $radius-lg;
+        background: $color-base-deep;
+        font-size: 15px;
+        line-height: 1.8;
+        text-align: left;
+    }
+
+    &__back {
+        min-height: 48px;
+        padding: 0 20px;
+        border: 0;
+        background: transparent;
+        color: $color-sage-700;
+        font-size: 15px;
+        font-weight: 700;
+        text-decoration: underline;
+        text-underline-offset: 4px;
+        cursor: pointer;
+
+        &:hover {
+            color: $color-sage-800;
+        }
+    }
+}
+
+// LINE・電話の予約リンク
+.reserve-links {
+    @include auto-grid(240px);
+    gap: $space-3;
+    margin-top: $space-5;
+}
+
+.reserve-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 64px;
+    border: 1px solid $color-sage-300;
+    border-radius: $radius-lg;
+    background: $color-surface;
+    color: $color-ink;
+    text-decoration: none;
+    transition: $transition;
+
+    &:hover {
+        border-color: $color-sage-700;
+        color: $color-ink;
+    }
+
+    &__title {
+        font-size: 16px;
+        font-weight: 700;
+    }
+
+    &__text {
+        font-size: 13px;
+        color: $color-ink-muted;
+    }
+}
+
+// =====================================================
+// フッター
+// =====================================================
+.footer {
+    padding: clamp(48px, 6vw, 72px) 0 40px;
+    background: $color-ink;
+    color: #E9ECE6;
+
+    // SPは固定予約バーの分だけ下に余白を取る
+    @include sp {
+        padding-bottom: 112px;
+    }
+
+    &__inner {
+        display: flex;
+        flex-direction: column;
+        gap: $space-6;
+    }
+
+    &__top {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: $space-6;
+    }
+
+    &__info {
+        display: flex;
+        flex-direction: column;
+        gap: $space-3;
+    }
+
+    &__address {
+        margin: 0;
+        font-size: 14px;
+        line-height: 1.9;
+    }
+
+    &__nav {
+        display: flex;
+        flex-wrap: wrap;
+        align-content: flex-start;
+        gap: $space-1 $space-5;
+        font-size: 14px;
+    }
+
+    &__link {
+        display: flex;
+        align-items: center;
+        min-height: 44px;
+        color: #E9ECE6;
+        text-decoration: none;
+
+        &:hover {
+            color: $color-surface;
+            text-decoration: underline;
+        }
+
+        &:focus-visible {
+            outline-color: $color-surface;
+        }
+    }
+
+    &__bottom {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: $space-2;
+        padding-top: 20px;
+        border-top: 1px solid #4A564E;
+        font-size: 12px;
+        color: #C4CBC4;
+
+        small {
+            font-size: inherit;
+        }
+    }
+}
+
+// =====================================================
+// SP固定予約バー
+// =====================================================
+.fixed-bar {
+    display: none;
+
+    @include sp {
+        position: fixed;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 30;
+        display: flex;
+        gap: $space-2;
+        padding: 10px $space-3 calc(12px + env(safe-area-inset-bottom));
+        border-top: 1px solid $color-line-light;
+        background: rgba(250, 248, 244, .97);
+    }
+
+    &__sub {
+        display: flex;
+        flex: 0 0 56px;
+        align-items: center;
+        justify-content: center;
+        height: 56px;
+        border: 1px solid $color-sage-line;
+        border-radius: $radius-md;
+        color: $color-sage-800;
+        font-size: 13px;
+        font-weight: 700;
+        text-decoration: none;
+
+        &:active {
+            background: $color-sage-100;
+        }
+    }
+
+    &__reserve {
+        display: flex;
+        flex: 1;
+        align-items: center;
+        justify-content: center;
+        gap: $space-2;
+        height: 56px;
+        border-radius: $radius-md;
+        background: $color-accent;
+        color: $color-surface;
+        text-decoration: none;
+
+        &:hover,
+        &:active {
+            background: $color-accent-hover;
+            color: $color-surface;
+        }
+    }
+
+    &__small {
+        font-size: 13px;
+    }
+
+    &__price {
+        @include heading(700);
+        font-size: 21px;
+    }
+
+    &__label {
+        font-size: 14px;
+        font-weight: 700;
+    }
+}
+
+// =====================================================
+// 視差効果を減らす設定のときは、すべてのアニメーションを止める
+// =====================================================
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        transition-duration: .01ms !important;
+        animation-duration: .01ms !important;
+    }
+}

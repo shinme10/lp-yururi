@@ -1,0 +1,15 @@
+# 生成元の原寸画像（サイトではWebPのみ使用）
+img/*.png
+
+# SCSSのソースマップ
+*.css.map
+
+# Node.js（npx sass 等を使う場合）
+node_modules/
+
+# OS・エディタが生成するファイル
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/

@@ -1,0 +1,7 @@
+# テキストファイルの改行コードをLFに統一
+* text=auto eol=lf
+
+# 画像はバイナリとして扱う
+*.png  binary
+*.jpg  binary
+*.webp binary
