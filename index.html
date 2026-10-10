@@ -632,8 +632,9 @@
                     </div>
 
                     <div class="form__submit">
-                        <button type="submit" class="form__button">予約内容を送信する</button>
-                        <p class="form__note">送信後のキャンセル・変更もお気軽にどうぞ。<br>ご入力いただいた情報はご予約の連絡にのみ使用します。</p>
+                        <!-- JSの初期化前に送信されないよう、main.js で有効化する -->
+                        <button type="submit" class="form__button" disabled>予約内容を送信する</button>
+                        <p class="form__note">送信後のキャンセル・変更もお気軽にどうぞ。<br>ご入力いただいた情報はご予約の連絡にのみ使用します。<br><strong>※ポートフォリオ用のデモのため、入力内容は送信・保存されません。</strong></p>
                     </div>
                 </form>
 

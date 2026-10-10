@@ -296,4 +296,7 @@ function initForm() {
         inputs.t1.value = '14:00';
         showComplete(getValues());
     }
+
+    // 初期化が済んだので送信ボタンを有効にする（HTML側では disabled にしてある）
+    submitButton.disabled = false;
 }
